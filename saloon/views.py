@@ -295,7 +295,9 @@ def booking_api(request):
             status=400
         )
     
-@api_view(["GET"])
+
+    
+@api_view(["GET", "PUT", "DELETE"])
 def booking_detail(request, pk):
 
     booking = get_object_or_404(
@@ -303,10 +305,47 @@ def booking_detail(request, pk):
         pk=pk
     )
 
-    serializer = BookingSerializer(
-        booking
-    )
+    # GET
+    if request.method == "GET":
 
-    return Response(
-        serializer.data
-    )
+        serializer = BookingSerializer(
+            booking
+        )
+
+        return Response(
+            serializer.data
+        )
+
+    # PUT
+    elif request.method == "PUT":
+
+        serializer = BookingSerializer(
+            booking,
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                serializer.data
+            )
+
+        return Response(
+            serializer.errors,
+            status=400
+        )
+
+    # DELETE
+    elif request.method == "DELETE":
+
+        booking.delete()
+
+        return Response(
+            {
+                "message":
+                "Booking deleted successfully"
+            },
+            status=204
+        )
