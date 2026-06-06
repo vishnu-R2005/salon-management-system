@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GlowUp Salon</title>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>GlowUp Salon</h1>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+        {%if user.is_authenticated %}
+            <a href="/book-service/">
+                Book Appointment
+            </a>
+            {% if user.groups.all.0.name == "Manager" %}
+                <a href="/manager/">
+                    Manager Dashboard
+                </a>
+            {% endif %}
+            <a href="/bookings/">
+                View Bookings
+            </a>
+            <a href="/logout/">
+                Logout  
+            </a>
+            {% else %}
+
+            <a href="/login/">
+                Login
+            </a>
+        {%endif%}
+
+        </nav>
+
+    </header>
+
+    <hr>
+
+    <section>
+
+        <h2>
+            Professional Hair & Beauty Services
+        </h2>
+
+        <p>
+            Haircut, Hair Styling,
+            Beard Grooming,
+            Facial Treatments,
+            Bridal Makeup
+        </p>
+
+        
+        {%if user.is_authenticated%}
+        <a href="/book-service/">
+            Book Now
+        </a>
+        {%else%}
+        <a href="/login/">
+            Book Now
+        </a>
+        {%endif%}
+
+    </section>
+
+    <hr>
+
+    <footer>
+
+        <p>
+            © 2026 GlowUp Salon
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

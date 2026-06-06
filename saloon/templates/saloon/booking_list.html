@@ -1,0 +1,21 @@
+<h1>Bookings</h1>
+
+{% for booking in bookings %}
+
+<p>
+
+{{ booking.customer_name }}
+
+{{ booking.service }}
+
+<a href="/update-booking/{{ booking.id }}/">
+    Edit
+</a>
+
+<a href="/delete-booking/{{ booking.id }}/">
+    Delete
+</a>
+
+</p>
+
+{% endfor %}
