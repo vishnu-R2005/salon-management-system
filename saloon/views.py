@@ -25,6 +25,9 @@ from rest_framework.response import Response
 from .models import Booking
 
 from .serializers import BookingSerializer
+from django.shortcuts import get_object_or_404
+
+from rest_framework import viewsets
 
 
 def register(request):
@@ -258,16 +261,38 @@ def manager_dashboard(request):
         "Permission Denied"
     )
 
-@api_view(["GET"])
-def booking_api(request):
+class BookingViewSet(
+    viewsets.ModelViewSet
+):
 
-    bookings = Booking.objects.all()
+    serializer_class = BookingSerializer
 
-    serializer = BookingSerializer(
-        bookings,
-        many=True
-    )
+    def get_queryset(self):
 
-    return Response(
-        serializer.data
-    )
+        user = self.request.user
+
+        if user.groups.filter(
+            name="Receptionist"
+        ).exists():
+
+            return Booking.objects.all()
+
+        if user.groups.filter(
+            name="Manager"
+        ).exists():
+
+            return Booking.objects.all()
+
+        return Booking.objects.filter(
+            customer_name=user.username
+        )
+
+    def perform_create(
+        self,
+        serializer
+    ):
+
+        serializer.save(
+            customer_name=
+            self.request.user.username
+        )
