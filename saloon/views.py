@@ -261,8 +261,28 @@ def manager_dashboard(request):
         "Permission Denied"
     )
 
-class BookingViewSet(viewsets.ModelViewSet):
-
-    queryset = Booking.objects.all()
+class BookingViewSet(
+    viewsets.ModelViewSet
+):
 
     serializer_class = BookingSerializer
+
+    def get_queryset(self):
+
+        user = self.request.user
+
+        if user.groups.filter(
+            name="Receptionist"
+        ).exists():
+
+            return Booking.objects.all()
+
+        if user.groups.filter(
+            name="Manager"
+        ).exists():
+
+            return Booking.objects.all()
+
+        return Booking.objects.filter(
+            customer_name=user.username
+        )
