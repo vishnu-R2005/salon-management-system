@@ -49,4 +49,8 @@ path(
     "api/bookings/",
     views.booking_api
 ),
+path(
+    "api/bookings/<int:pk>/",
+    views.booking_detail
+),
 ]

@@ -25,6 +25,7 @@ from rest_framework.response import Response
 from .models import Booking
 
 from .serializers import BookingSerializer
+from django.shortcuts import get_object_or_404
 
 
 def register(request):
@@ -293,3 +294,19 @@ def booking_api(request):
             serializer.errors,
             status=400
         )
+    
+@api_view(["GET"])
+def booking_detail(request, pk):
+
+    booking = get_object_or_404(
+        Booking,
+        pk=pk
+    )
+
+    serializer = BookingSerializer(
+        booking
+    )
+
+    return Response(
+        serializer.data
+    )
