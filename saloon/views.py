@@ -27,6 +27,8 @@ from .models import Booking
 from .serializers import BookingSerializer
 from django.shortcuts import get_object_or_404
 
+from rest_framework import viewsets
+
 
 def register(request):
 
@@ -259,93 +261,8 @@ def manager_dashboard(request):
         "Permission Denied"
     )
 
-@api_view(["GET", "POST"])
-def booking_api(request):
+class BookingViewSet(viewsets.ModelViewSet):
 
-    if request.method == "GET":
+    queryset = Booking.objects.all()
 
-        bookings = Booking.objects.all()
-
-        serializer = BookingSerializer(
-            bookings,
-            many=True
-        )
-
-        return Response(
-            serializer.data
-        )
-
-    elif request.method == "POST":
-
-        serializer = BookingSerializer(
-            data=request.data
-        )
-
-        if serializer.is_valid():
-
-            serializer.save()
-
-            return Response(
-                serializer.data,
-                status=201
-            )
-
-        return Response(
-            serializer.errors,
-            status=400
-        )
-    
-
-    
-@api_view(["GET", "PUT", "DELETE"])
-def booking_detail(request, pk):
-
-    booking = get_object_or_404(
-        Booking,
-        pk=pk
-    )
-
-    # GET
-    if request.method == "GET":
-
-        serializer = BookingSerializer(
-            booking
-        )
-
-        return Response(
-            serializer.data
-        )
-
-    # PUT
-    elif request.method == "PUT":
-
-        serializer = BookingSerializer(
-            booking,
-            data=request.data
-        )
-
-        if serializer.is_valid():
-
-            serializer.save()
-
-            return Response(
-                serializer.data
-            )
-
-        return Response(
-            serializer.errors,
-            status=400
-        )
-
-    # DELETE
-    elif request.method == "DELETE":
-
-        booking.delete()
-
-        return Response(
-            {
-                "message":
-                "Booking deleted successfully"
-            },
-            status=204
-        )
+    serializer_class = BookingSerializer
