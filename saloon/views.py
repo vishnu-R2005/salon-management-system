@@ -286,3 +286,13 @@ class BookingViewSet(
         return Booking.objects.filter(
             customer_name=user.username
         )
+
+    def perform_create(
+        self,
+        serializer
+    ):
+
+        serializer.save(
+            customer_name=
+            self.request.user.username
+        )
