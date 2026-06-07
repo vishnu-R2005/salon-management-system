@@ -29,6 +29,13 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
 
+from rest_framework.authtoken.models import Token
+
+from django.contrib.auth import authenticate
+
+from rest_framework.decorators import api_view
+
+from rest_framework.response import Response
 
 def register(request):
 
@@ -109,6 +116,42 @@ def user_login(request):
         request,
         "saloon/login.html"
     )
+
+
+
+@api_view(["POST"])
+def api_login(request):
+
+    username = request.data.get(
+        "username"
+    )
+
+    password = request.data.get(
+        "password"
+    )
+
+    user = authenticate(
+        username=username,
+        password=password
+    )
+
+    if user:
+
+        token, created = Token.objects.get_or_create(
+            user=user
+        )
+
+        return Response({
+
+            "token": token.key
+
+        })
+
+    return Response({
+
+        "error": "Invalid Credentials"
+
+    })
 
 
 # @login_required

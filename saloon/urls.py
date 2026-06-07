@@ -69,5 +69,9 @@ urlpatterns = [
         views.manager_dashboard,
         name='manager_dashboard'
     ),
+    path(
+    "api/login/",
+    views.api_login
+),
 
 ] + router.urls
