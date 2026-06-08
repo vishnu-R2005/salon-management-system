@@ -25,7 +25,7 @@ SECRET_KEY = config(
     "SECRET_KEY"
 )
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -43,9 +43,13 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
+    # "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -132,7 +136,23 @@ REST_FRAMEWORK = {
 
         "rest_framework.permissions.IsAuthenticated",
 
-    )
+    ),
+
+     "DEFAULT_SCHEMA_CLASS":
+        "drf_spectacular.openapi.AutoSchema",
+
+}
+
+SPECTACULAR_SETTINGS = {
+
+    "TITLE":
+    "Salon Booking API",
+
+    "DESCRIPTION":
+    "Salon Booking System Backend APIs",
+
+    "VERSION":
+    "1.0.0",
 
 }
 
@@ -164,3 +184,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 LOGIN_URL = "login"
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+CORS_ALLOWED_ORIGINS = [
+
+    "http://localhost:3000",
+
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
