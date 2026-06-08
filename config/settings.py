@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,10 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-pq%@_8=xtl3-453_p8946y!k58+(kem8rrkf=1m23fb+32e%rk'
-
+SECRET_KEY = config(
+    "SECRET_KEY"
+)
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -41,9 +43,13 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
+    # "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -77,12 +83,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE":
+        "django.db.backends.postgresql",
+
+        "NAME":
+        config("DB_NAME"),
+
+        "USER":
+        config("DB_USER"),
+
+        "PASSWORD":
+        config("DB_PASSWORD"),
+
+        "HOST":
+        config("DB_HOST"),
+
+        "PORT":
+        config("DB_PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -116,7 +136,23 @@ REST_FRAMEWORK = {
 
         "rest_framework.permissions.IsAuthenticated",
 
-    )
+    ),
+
+     "DEFAULT_SCHEMA_CLASS":
+        "drf_spectacular.openapi.AutoSchema",
+
+}
+
+SPECTACULAR_SETTINGS = {
+
+    "TITLE":
+    "Salon Booking API",
+
+    "DESCRIPTION":
+    "Salon Booking System Backend APIs",
+
+    "VERSION":
+    "1.0.0",
 
 }
 
@@ -148,3 +184,12 @@ USE_TZ = True
 STATIC_URL = 'static/'
 LOGIN_URL = "login"
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+CORS_ALLOWED_ORIGINS = [
+
+    "http://localhost:3000",
+
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
